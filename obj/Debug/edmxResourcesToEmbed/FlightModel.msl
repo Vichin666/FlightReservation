@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="flightdbModelStoreContainer" CdmEntityContainer="flightdbEntities">
+    <EntitySetMapping Name="Admins">
+      <EntityTypeMapping TypeName="flightdbModel.Admin">
+        <MappingFragment StoreEntitySet="Admin">
+          <ScalarProperty Name="adminID" ColumnName="adminID" />
+          <ScalarProperty Name="adminIC" ColumnName="adminIC" />
+          <ScalarProperty Name="adminEmail" ColumnName="adminEmail" />
+          <ScalarProperty Name="adminContactNo" ColumnName="adminContactNo" />
+          <ScalarProperty Name="adminPassword" ColumnName="adminPassword" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Flights">
+      <EntityTypeMapping TypeName="flightdbModel.Flight">
+        <MappingFragment StoreEntitySet="Flight">
+          <ScalarProperty Name="flightID" ColumnName="flightID" />
+          <ScalarProperty Name="flightName" ColumnName="flightName" />
+          <ScalarProperty Name="totalSeats" ColumnName="totalSeats" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Payments">
+      <EntityTypeMapping TypeName="flightdbModel.Payment">
+        <MappingFragment StoreEntitySet="Payment">
+          <ScalarProperty Name="paymentID" ColumnName="paymentID" />
+          <ScalarProperty Name="paymentType" ColumnName="paymentType" />
+          <ScalarProperty Name="paymentDate" ColumnName="paymentDate" />
+          <ScalarProperty Name="reservationID" ColumnName="reservationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reservations">
+      <EntityTypeMapping TypeName="flightdbModel.Reservation">
+        <MappingFragment StoreEntitySet="Reservation">
+          <ScalarProperty Name="reservationID" ColumnName="reservationID" />
+          <ScalarProperty Name="fromLocation" ColumnName="fromLocation" />
+          <ScalarProperty Name="toDestination" ColumnName="toDestination" />
+          <ScalarProperty Name="departureDate" ColumnName="departureDate" />
+          <ScalarProperty Name="departureTime" ColumnName="departureTime" />
+          <ScalarProperty Name="returnDate" ColumnName="returnDate" />
+          <ScalarProperty Name="returnTime" ColumnName="returnTime" />
+          <ScalarProperty Name="reservationDate" ColumnName="reservationDate" />
+          <ScalarProperty Name="flightID" ColumnName="flightID" />
+          <ScalarProperty Name="adminID" ColumnName="adminID" />
+          <ScalarProperty Name="username" ColumnName="username" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tickets">
+      <EntityTypeMapping TypeName="flightdbModel.Ticket">
+        <MappingFragment StoreEntitySet="Ticket">
+          <ScalarProperty Name="ticketID" ColumnName="ticketID" />
+          <ScalarProperty Name="ticketPrice" ColumnName="ticketPrice" />
+          <ScalarProperty Name="seatNo" ColumnName="seatNo" />
+          <ScalarProperty Name="reservationID" ColumnName="reservationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="flightdbModel.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="userIC" ColumnName="userIC" />
+          <ScalarProperty Name="userEmail" ColumnName="userEmail" />
+          <ScalarProperty Name="userContactNo" ColumnName="userContactNo" />
+          <ScalarProperty Name="userPassword" ColumnName="userPassword" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="flightdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Admin">
+    <Key>
+      <PropertyRef Name="adminID" />
+    </Key>
+    <Property Name="adminID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="adminIC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="adminEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="adminContactNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="adminPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Reservations" Relationship="Self.FK_Reservation_Admin" FromRole="Admin" ToRole="Reservation" />
+  </EntityType>
+  <EntityType Name="Flight">
+    <Key>
+      <PropertyRef Name="flightID" />
+    </Key>
+    <Property Name="flightID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="flightName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="totalSeats" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Reservations" Relationship="Self.FK_Reservation_Flight" FromRole="Flight" ToRole="Reservation" />
+  </EntityType>
+  <EntityType Name="Payment">
+    <Key>
+      <PropertyRef Name="paymentID" />
+    </Key>
+    <Property Name="paymentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="paymentType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="paymentDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="reservationID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Reservation" Relationship="Self.FK_Payment_Reservation" FromRole="Payment" ToRole="Reservation" />
+  </EntityType>
+  <EntityType Name="Reservation">
+    <Key>
+      <PropertyRef Name="reservationID" />
+    </Key>
+    <Property Name="reservationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="fromLocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="toDestination" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="departureDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="departureTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="returnDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="returnTime" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="reservationDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="flightID" Type="Int32" Nullable="false" />
+    <Property Name="adminID" Type="Int32" Nullable="false" />
+    <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Admin" Relationship="Self.FK_Reservation_Admin" FromRole="Reservation" ToRole="Admin" />
+    <NavigationProperty Name="Flight" Relationship="Self.FK_Reservation_Flight" FromRole="Reservation" ToRole="Flight" />
+    <NavigationProperty Name="Payments" Relationship="Self.FK_Payment_Reservation" FromRole="Reservation" ToRole="Payment" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Reservation_User" FromRole="Reservation" ToRole="User" />
+    <NavigationProperty Name="Tickets" Relationship="Self.FK_Ticket_Reservation" FromRole="Reservation" ToRole="Ticket" />
+  </EntityType>
+  <EntityType Name="Ticket">
+    <Key>
+      <PropertyRef Name="ticketID" />
+    </Key>
+    <Property Name="ticketID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ticketPrice" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="seatNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="reservationID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Reservation" Relationship="Self.FK_Ticket_Reservation" FromRole="Ticket" ToRole="Reservation" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="username" />
+    </Key>
+    <Property Name="username" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="userIC" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="userEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="userContactNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="userPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Reservations" Relationship="Self.FK_Reservation_User" FromRole="User" ToRole="Reservation" />
+  </EntityType>
+  <Association Name="FK_Reservation_Admin">
+    <End Role="Admin" Type="Self.Admin" Multiplicity="1" />
+    <End Role="Reservation" Type="Self.Reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admin">
+        <PropertyRef Name="adminID" />
+      </Principal>
+      <Dependent Role="Reservation">
+        <PropertyRef Name="adminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reservation_Flight">
+    <End Role="Flight" Type="Self.Flight" Multiplicity="1" />
+    <End Role="Reservation" Type="Self.Reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Flight">
+        <PropertyRef Name="flightID" />
+      </Principal>
+      <Dependent Role="Reservation">
+        <PropertyRef Name="flightID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payment_Reservation">
+    <End Role="Reservation" Type="Self.Reservation" Multiplicity="1" />
+    <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reservation">
+        <PropertyRef Name="reservationID" />
+      </Principal>
+      <Dependent Role="Payment">
+        <PropertyRef Name="reservationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Reservation_User">
+    <End Role="User" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Reservation" Type="Self.Reservation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="username" />
+      </Principal>
+      <Dependent Role="Reservation">
+        <PropertyRef Name="username" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Ticket_Reservation">
+    <End Role="Reservation" Type="Self.Reservation" Multiplicity="1" />
+    <End Role="Ticket" Type="Self.Ticket" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Reservation">
+        <PropertyRef Name="reservationID" />
+      </Principal>
+      <Dependent Role="Ticket">
+        <PropertyRef Name="reservationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="flightdbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Admins" EntityType="Self.Admin" />
+    <EntitySet Name="Flights" EntityType="Self.Flight" />
+    <EntitySet Name="Payments" EntityType="Self.Payment" />
+    <EntitySet Name="Reservations" EntityType="Self.Reservation" />
+    <EntitySet Name="Tickets" EntityType="Self.Ticket" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_Reservation_Admin" Association="Self.FK_Reservation_Admin">
+      <End Role="Admin" EntitySet="Admins" />
+      <End Role="Reservation" EntitySet="Reservations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reservation_Flight" Association="Self.FK_Reservation_Flight">
+      <End Role="Flight" EntitySet="Flights" />
+      <End Role="Reservation" EntitySet="Reservations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payment_Reservation" Association="Self.FK_Payment_Reservation">
+      <End Role="Reservation" EntitySet="Reservations" />
+      <End Role="Payment" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Reservation_User" Association="Self.FK_Reservation_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Reservation" EntitySet="Reservations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Ticket_Reservation" Association="Self.FK_Ticket_Reservation">
+      <End Role="Reservation" EntitySet="Reservations" />
+      <End Role="Ticket" EntitySet="Tickets" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
