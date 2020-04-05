@@ -44,13 +44,10 @@ namespace Flight_Reservation
                 {
                     con.Open();
                     cmd.CommandText = "select totalSeat from Reservation where scheduleID = @scheduleID";
-                    cmd.Parameters.AddWithValue("@reservationDate", DateTime.Now.Date.ToShortDateString());
-                    cmd.Parameters.AddWithValue("@totalSeat", int.Parse(Request.QueryString["totalSeat"].ToString()));
-                    cmd.Parameters.AddWithValue("@scheduleID", int.Parse(Request.QueryString["scheduleID"].ToString()));
-                    cmd.Parameters.AddWithValue("@username", Session["username"].ToString());
+                    cmd.Parameters.AddWithValue("@scheduleID", scheduleID);    
                     cmd.Connection = con;
                     SqlDataReader myReader = cmd.ExecuteReader();
-                    cmd.Parameters.Add("@scheduleID", scheduleID);
+                    
                     while (myReader.Read())
                     {
                         totalOccupiedSeat += int.Parse(myReader.GetValue(0).ToString());
