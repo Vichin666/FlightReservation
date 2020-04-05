@@ -25,29 +25,31 @@ namespace Flight_Reservation
             if (adultQty == 0 && childQty == 0)
             {
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "Scripts", "<script>alert('Choose a seat before make payment ! Redirecting to the Home Page...');window.location='../Homepage/Home.aspx';</script>");
-
             }
             else
             {
-                GridViewRow gvr = GridView.SelectedRow; ;
+                GridViewRow gvr = GridView.SelectedRow;
 
                 string scheduleID = gvr.Cells[0].Text;
                 string totalPrice = gvr.Cells[7].Text;
                 int totalOccupiedSeat = 0;
+                int totalSeats = 0;
+
                 SqlConnection con = new SqlConnection();
                 con.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-                SqlCommand cmd = new SqlCommand();
-                con = new SqlConnection();
-                con.ConnectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ToString();
-                cmd = new SqlCommand();
+
                 try
                 {
+                    int flightID = -1;
+
+                    //Get Total Occupied Seat
+                    SqlCommand cmd = new SqlCommand();
                     con.Open();
                     cmd.CommandText = "select totalSeat from Reservation where scheduleID = @scheduleID";
-                    cmd.Parameters.AddWithValue("@scheduleID", scheduleID);    
+                    cmd.Parameters.AddWithValue("@scheduleID", scheduleID);
                     cmd.Connection = con;
                     SqlDataReader myReader = cmd.ExecuteReader();
-                    
+
                     while (myReader.Read())
                     {
                         totalOccupiedSeat += int.Parse(myReader.GetValue(0).ToString());
@@ -55,22 +57,66 @@ namespace Flight_Reservation
                     myReader.Close();
                     con.Close();
 
+                    //Get Flight ID
+                    cmd = new SqlCommand();
+                    con.Open();
+                    cmd.CommandText = "select flightID from Schedule where scheduleID = @scheduleID";
+                    cmd.Parameters.AddWithValue("@scheduleID", scheduleID);
+                    cmd.Connection = con;
+                    myReader = cmd.ExecuteReader();
+
+                    while (myReader.Read())
+                    {
+                        flightID = int.Parse(myReader.GetValue(0).ToString());
+                    }
+                    myReader.Close();
+                    con.Close();
+
+                    if (flightID != -1)
+                    {
+                        //Get Total Flight Seat
+                        cmd = new SqlCommand();
+                        con.Open();
+                        cmd.CommandText = "select totalSeats from Flight where flightID = @flightID";
+                        cmd.Parameters.AddWithValue("@flightID", flightID);
+                        cmd.Connection = con;
+                        myReader = cmd.ExecuteReader();
+
+                        while (myReader.Read())
+                        {
+                            totalSeats = int.Parse(myReader.GetValue(0).ToString());
+                        }
+                        myReader.Close();
+                        con.Close();
+
+                        //Checking is it over seat 
+
+                        totalOccupiedSeat += adultQty + childQty;
+                        Boolean overSeat = totalSeats - totalOccupiedSeat < 0;
+
+                        if (overSeat)
+                        {
+                            int overSeats = totalSeats - totalOccupiedSeat;
+                            Response.Write("<script>alert('Your selected seats have been exceed the capacity of flight. [Exceed " + Math.Abs(overSeats) + " seat(s)]')</script>");
+                        }
+                        else
+                        {
+                            Response.Redirect("~/ShowFlightConfirmation/FlightConfirmation.aspx?scheduleID=" + scheduleID +
+                        "&adultQty=" + adultQty + "&childQty=" + childQty + "&totalPrice=" + totalPrice);
+                        }
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Something wrong with database.')</script>");
+                    }
                 }
                 catch (Exception ex)
                 {
                     //Response.Write("<script>alert('Username is already existed! Please try other.')</script>");
                     Response.Write(ex.ToString());
                 }
-
-               
-
-
-
-                //chg direct file
-                Response.Redirect("~/ShowFlightConfirmation/FlightConfirmation.aspx?scheduleID=" + scheduleID +
-                    "&adultQty=" + adultQty + "&childQty=" + childQty + "&totalPrice=" + totalPrice);
             }
-            }
+        }
 
         protected void Button_Click(object sender, EventArgs e)
         {
